@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SimplePosts.Server.Repository;
+using SimplePosts.Server.Repository.Base;
 using SimplePosts.Server.Repository.Context;
-using SimplePosts.Server.Services;
-using System.Linq;
+using SimplePosts.Server.Repository.Interfaces;
+using SimplePosts.Shared.Models.Entities;
 
 namespace SimplePosts.Server
 {
@@ -28,12 +28,13 @@ namespace SimplePosts.Server
             services.AddControllersWithViews();
             services.AddRazorPages();
 
-            services.AddDbContext<ProductDbContext>(options =>
+            services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlite("Data Source = Products.db");
             });
 
-            services.AddScoped<ProductServices>();
+            // REPOSITORIES
+            services.AddTransient<IProductRepository, ProductsRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

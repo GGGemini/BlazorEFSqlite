@@ -1,32 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SimplePosts.Server.Services;
+using SimplePosts.Server.Repository.Interfaces;
 using SimplePosts.Shared.Models.Entities;
 using SimplePosts.Shared.Models.Forms;
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SimplePosts.Server.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class ProductsController : ControllerBase
     {
-        ProductServices service;
+        readonly IProductRepository _repository;
 
-        public ProductController(ProductServices service)
+        public ProductsController(IProductRepository repository)
         {
-            this.service = service;
+            _repository = repository;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public IActionResult Get()
         {
             try
             {
-                return Ok(await service.GetProductsAsync());
+                return Ok(_repository.GetAll());
             }
             catch (Exception e)
             {
@@ -35,13 +31,13 @@ namespace SimplePosts.Server.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public IActionResult Get(int id)
         {
-            return Ok(await service.GetProductAsync(id));
+            return Ok(_repository.GetById(id));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] ProductForm form)
+        public IActionResult Post([FromBody] ProductForm form)
         {
             try
             {
@@ -53,7 +49,7 @@ namespace SimplePosts.Server.Controllers
                     Quantity = form.Quantity
                 };
 
-                return Ok(await service.AddProductAsync(entity));
+                return Ok(_repository.Create(entity));
             }
             catch (Exception e)
             {
@@ -62,18 +58,11 @@ namespace SimplePosts.Server.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] ProductForm form)
+        public IActionResult Put(int id, [FromBody] ProductForm form)
         {
             try
             {
-                Product entity = await service.GetProductAsync(id);
-
-                if (entity == null)
-                {
-                    return BadRequest($"Сущности с id {id} не существует");
-                }
-
-                entity = new Product
+                Product entity = new Product
                 {
                     Id = id,
                     Name = form.Name,
@@ -82,7 +71,7 @@ namespace SimplePosts.Server.Controllers
                     Quantity = form.Quantity
                 };
 
-                return Ok(await service.UpdateProductAsync(entity));
+                return Ok(_repository.Update(entity));
             }
             catch (Exception e)
             {
@@ -91,18 +80,11 @@ namespace SimplePosts.Server.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public IActionResult Delete(int id)
         {
             try
             {
-                Product entity = await service.GetProductAsync(id);
-
-                if (entity == null)
-                {
-                    return BadRequest($"Сущности с id {id} не существует");
-                }
-
-                await service.DeleteProductAsync(entity);
+                _repository.Delete(id);
 
                 return Ok();
             }

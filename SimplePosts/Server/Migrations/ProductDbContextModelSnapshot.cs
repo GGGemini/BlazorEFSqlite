@@ -6,7 +6,7 @@ using SimplePosts.Server.Repository.Context;
 
 namespace SimplePosts.Server.Migrations
 {
-    [DbContext(typeof(ProductDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     partial class ProductDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

@@ -7,7 +7,7 @@ using SimplePosts.Server.Repository.Context;
 
 namespace SimplePosts.Server.Migrations
 {
-    [DbContext(typeof(ProductDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20210329161439_Initial-Commit")]
     partial class InitialCommit
     {

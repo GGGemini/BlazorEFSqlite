@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimplePosts.Server", "SimplePosts\Server\SimplePosts.Server.csproj", "{3463A50F-45CE-4340-8DDB-6D30BDF8B7F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimplePosts.Server", "SimplePosts\Server\SimplePosts.Server.csproj", "{3463A50F-45CE-4340-8DDB-6D30BDF8B7F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimplePosts.Client", "SimplePosts\Client\SimplePosts.Client.csproj", "{BF37A650-E113-459A-A275-BA433BEFBDAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimplePosts.Client", "SimplePosts\Client\SimplePosts.Client.csproj", "{BF37A650-E113-459A-A275-BA433BEFBDAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimplePosts.Shared", "SimplePosts\Shared\SimplePosts.Shared.csproj", "{EC3C3C73-02B3-411F-A3DD-4CB3083AFF59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimplePosts.Shared", "SimplePosts\Shared\SimplePosts.Shared.csproj", "{EC3C3C73-02B3-411F-A3DD-4CB3083AFF59}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
