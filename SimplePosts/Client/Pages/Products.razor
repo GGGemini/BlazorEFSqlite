@@ -1,99 +1,58 @@
 ﻿@page "/products"
 
 @inject HttpClient Http
-    
-<div class="container">
-    <div class="row bg-light">
-        <table class="table table-bordered">
-            <thead class="thead-dark">
-                <tr>
-                    <th class="text-center">Имя</th>
-                    <th class="text-center">Стоимость</th>
-                    <th class="text-center">Количество</th>
-                    <th class="text-center">Описание</th>
-                    <th class="text-center">Редактировать</th>
-                    <th class="text-center">Удалить</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (products.Any())
-                {
-                    @foreach (Product product in products)
+
+<div class="main overflow-auto">
+    <div class="content px-4">
+        <button class="btn btn-info btn-lg" @onclick="CreateClick">+</button>
+        <div class="row">
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="text-center">Имя</th>
+                        <th class="text-center">Стоимость</th>
+                        <th class="text-center">Количество</th>
+                        <th class="text-center">Описание</th>
+                        <th class="text-center">Редактировать</th>
+                        <th class="text-center">Удалить</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ProductList.Any())
                     {
-                        @*<tr @onclick="(() => SetProductForUpdate(product))">*@
-                        <tr>
-                            <td class="text-center">@product.Name</td>
-                            <td class="text-center">@product.Price</td>
-                            <td class="text-center">@product.Quantity</td>
-                            <td class="text-center">@product.Description</td>
-                            <td class="text-center"><button class="btn btn-info" @onclick="(() => DeleteProduct(product.Id))">Редактировать</button></td>
-                            <td class="text-center"><button class="btn btn-danger" @onclick="(() => DeleteProduct(product.Id))">Удалить</button></td>
-                        </tr>
+                        @foreach (Product product in ProductList)
+                        {
+                            @*<tr @onclick="(() => SetProductForUpdate(product))">*@
+                            <tr>
+                                <td class="text-center">@product.Name</td>
+                                <td class="text-center">@product.Price</td>
+                                <td class="text-center">@product.Quantity</td>
+                                <td class="text-center">@product.Description</td>
+                                <td class="text-center"><button class="btn btn-info" @onclick="(() => SetProductForUpdate(product))">Редактировать</button></td>
+                                <td class="text-center"><button class="btn btn-danger" @onclick="(() => DeleteProduct(product.Id))">Удалить</button></td>
+                            </tr>
+                        }
                     }
-                }
-                else
-                {
-                    <tr><td colspan="6"><strong>No products available</strong></td></tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    <div class="row m-5">
-        <div class="col-5 bg-light m-2 justify-content-start">
-            <div class="p-3 mb-3 bg-primary text-white text-center">Add New Product</div>
-            <EditForm Model="@NewProduct">
-                <div class="form-group">
-                    <label for="name">Product Name</label>
-                    <input type="text" id="name" class="form-control" @bind="@NewProduct.Name" />
-                </div>
-                <div class="form-group">
-                    <label for="price">Price</label>
-                    <input type="text" id="price" class="form-control" @bind="@NewProduct.Price" />
-                </div>
-                <div class="form-group">
-                    <label for="quantity">Quantity</label>
-                    <input type="text" id="quantity" class="form-control" @bind="@NewProduct.Quantity" />
-                </div>
-                <div class="form-group">
-                    <label for="Description">Description</label>
-                    <input type="text" id="Description" class="form-control" @bind="@NewProduct.Description" />
-                </div>
-                <div class="text-center p-3 mb-3">
-                    <button class="btn btn-info" @onclick="AddNewProduct"> Add Product</button>
-                </div>
-            </EditForm>
-        </div>
-        <div class="col-5 bg-light m-2 justify-content-end">
-            <div class="p-3 mb-3 bg-primary text-white text-center">Update Product</div>
-            <EditForm Model="@UpdateProduct">
-                <div class="form-group">
-                    <label for="name">Product Name</label>
-                    <input type="text" id="name" class="form-control" @bind="@UpdateProduct.Name" />
-                </div>
-                <div class="form-group">
-                    <label for="price">Price</label>
-                    <input type="text" id="price" class="form-control" @bind="@UpdateProduct.Price" />
-                </div>
-                <div class="form-group">
-                    <label for="quantity">Quantity</label>
-                    <input type="text" id="quantity" class="form-control" @bind="@UpdateProduct.Quantity" />
-                </div>
-                <div class="form-group">
-                    <label for="Description">Description</label>
-                    <input type="text" id="Description" class="form-control" @bind="@UpdateProduct.Description" />
-                </div>
-                <div class="text-center p-3 mb-3">
-                    <button class="btn btn-info" @onclick="UpdateProductData"> Update Product</button>
-                </div>
-            </EditForm>
+                    else
+                    {
+                        <tr><td colspan="6"><strong>No products available</strong></td></tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
+    <ProductModal @bind-IsOpen="IsOpen" @bind-ProductList="ProductList" Model="@(new FormModel { Heading = "Добавление продукта", Product=CurrentProduct, ButtonText = "Создать" })"></ProductModal>
 </div>
 
-<BlazoredModal ></BlazoredModal>
-
 @code {
-    List<Product> products = new List<Product>();
+    bool IsOpen { get; set; }
+
+    void CreateClick()
+    {
+        IsOpen = true;
+    }
+
+    List<Product> ProductList = new List<Product>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -102,34 +61,21 @@
 
     private async Task RefreshProducts()
     {
-        products = await Http.GetFromJsonAsync<List<Product>>("products");
+        ProductList = await Http.GetFromJsonAsync<List<Product>>("products");
     }
 
-    public Product NewProduct { get; set; } = new Product();
-
-    private async Task AddNewProduct()
-    {
-        await Http.PostAsJsonAsync<Product>("products", NewProduct);
-        NewProduct = new Product();
-        await RefreshProducts();
-    }
-
-    Product UpdateProduct = new Product();
+    Product CurrentProduct = new Product();
 
     private void SetProductForUpdate(Product product)
     {
-        UpdateProduct = product;
-    }
+        CurrentProduct = product;
 
-    private async Task UpdateProductData()
-    {
-        await Http.PostAsJsonAsync<Product>("products", UpdateProduct);
-        await RefreshProducts();
+        CreateClick();
     }
 
     private async Task DeleteProduct(int id)
     {
         await Http.DeleteAsync($"products/{id}");
-        await RefreshProducts();
+        ProductList.Remove(ProductList.FirstOrDefault(p => p.Id == id));
     }
 }

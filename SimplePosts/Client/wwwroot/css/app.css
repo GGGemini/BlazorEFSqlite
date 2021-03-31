@@ -136,6 +136,14 @@ app {
     top: 0.5rem;
 }
 
+/*CUSTOM STYLES*/
+.my-form {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(0,0,0,0.5);
+}
+
 @media (max-width: 767.98px) {
     .main .top-row:not(.auth) {
         display: none;
@@ -179,5 +187,13 @@ app {
     .sidebar .collapse {
         /* Never collapse the sidebar for wide screens */
         display: block;
+    }
+
+    /*CUSTOM STYLES*/
+    .my-form {
+        position: absolute;
+        padding: 0 !important;
+        top: 0;
+        width: calc(100vw - 250px)
     }
 }

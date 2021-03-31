@@ -1,5 +1,81 @@
-﻿<h3>ProductModal</h3>
+﻿@inject HttpClient Http
+
+<div class="@(!IsOpen ? "modal fade" : "modal-open my-form d-flex") rounded-top h-100 align-items-center">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">@Model.Heading</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="Change">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="@Model.Product">
+                    <div class="form-group">
+                        <label for="name">Product Name</label>
+                        <input type="text" id="name" class="form-control" @bind="@Model.Product.Name" />
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Price</label>
+                        <input type="text" id="price" class="form-control" @bind="@Model.Product.Price" />
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">Quantity</label>
+                        <input type="text" id="quantity" class="form-control" @bind="@Model.Product.Quantity" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Description">Description</label>
+                        <input type="text" id="Description" class="form-control" @bind="@Model.Product.Description" />
+                    </div>
+                </EditForm>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" @onclick="Action">Ок</button>
+                <button type="button" class="btn btn-secondary">Отмена</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
+    #region СОСТОЯНИЕ МОДАЛЬНОГО ОКНА
+    [Parameter]
+    public bool IsOpen { get; set; }
+    [Parameter]
+    public EventCallback<bool> IsOpenChanged { get; set; }
+    private async Task Change()
+    {
+        await IsOpenChanged.InvokeAsync(false);
+    }
+    #endregion
 
+    #region ЛИСТ МОДЕЛЕЙ ДЛЯ ДИНАМИЧЕСКОГО ОБНОВЛЕНИЯ
+    [Parameter]
+    public List<Product> ProductList { get; set; }
+    [Parameter]
+    public EventCallback<List<Product>> ProductListChanged { get; set; }
+    #endregion
+
+    [Parameter]
+    public FormModel Model { get; set; }
+
+    async Task Action()
+    {
+        if (Model.Product.Id == 0)
+        {
+            HttpResponseMessage response = await Http.PostAsJsonAsync("products", Model.Product);
+            Product newProduct = await response.Content.ReadFromJsonAsync<Product>();
+            ProductList.Add(newProduct);
+            Model.Product = new Product();
+        }
+        else
+        {
+            await Http.PutAsJsonAsync<Product>($"products/{Model.Product.Id}", Model.Product);
+            Product productUpdated = ProductList.FirstOrDefault(p => p.Id == Model.Product.Id);
+            productUpdated = Model.Product;
+        }
+
+        await ProductListChanged.InvokeAsync(ProductList);
+        await Change();
+    }
 }

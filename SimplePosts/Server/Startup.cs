@@ -5,10 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SimplePosts.Server.Repository;
-using SimplePosts.Server.Repository.Base;
 using SimplePosts.Server.Repository.Context;
 using SimplePosts.Server.Repository.Interfaces;
-using SimplePosts.Shared.Models.Entities;
 
 namespace SimplePosts.Server
 {

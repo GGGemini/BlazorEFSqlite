@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using SimplePosts.Client.Pages;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -14,6 +15,9 @@ namespace SimplePosts.Client
             builder.RootComponents.Add<App>("app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
+            // SERVICES
+            builder.Services.AddTransient<Products>();
 
             await builder.Build().RunAsync();
         }

@@ -36,34 +36,28 @@ namespace SimplePosts.Server.Repository.Base
 
         public T Update(T entity)
         {
-            int id = (int)typeof(T).GetField("Id").GetValue(entity);
-
-            if (_dbSet.Find(id) != null)
+            if (!_dbSet.Contains(entity))
             {
-                _dbSet.Update(entity);
-                _context.SaveChanges();
+                throw new Exception("Такой сущности не существует");
+            }
 
-                return entity;
-            }
-            else
-            {
-                throw new Exception($"Сущности с id {id} не существует");
-            }
+            _dbSet.Update(entity);
+            _context.SaveChanges();
+
+            return entity;
         }
 
         public void Delete(int id)
         {
             T entity = _dbSet.Find(id);
 
-            if (_dbSet.Find(id) != null)
+            if (!_dbSet.Contains(entity))
             {
-                _dbSet.Remove(entity);
-                _context.SaveChanges();
+                throw new Exception("Такой сущности не существует");
             }
-            else
-            {
-                throw new Exception($"Сущности с id {id} не существует");
-            }
+
+            _dbSet.Remove(entity);
+            _context.SaveChanges();
         }
     }
 }
