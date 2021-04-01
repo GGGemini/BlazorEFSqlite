@@ -16,9 +16,6 @@ namespace SimplePosts.Client
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-            // SERVICES
-            builder.Services.AddTransient<Products>();
-
             await builder.Build().RunAsync();
         }
     }
