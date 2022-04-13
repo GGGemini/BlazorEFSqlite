@@ -1,7 +1,4 @@
-﻿.vs
-SimplePosts/Client/bin
-SimplePosts/Client/obj
-SimplePosts/Server/bin
-SimplePosts/Shared/obj
-SimplePosts/Shared/bin
-SimplePosts/Server/obj
+﻿bin
+obj
+.vs
+.idea
